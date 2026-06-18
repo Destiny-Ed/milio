@@ -124,7 +124,7 @@ class ProjectsScreen extends StatelessWidget {
                         title: "No Projects Yet",
                         subtitle: "Create your first escrow project to start managing milestones securely.",
                         buttonText: "Create Project",
-                        onTap: () {},
+                        // onTap: () {},
                       )
                     : ListView.separated(
                         itemCount: projects.length,

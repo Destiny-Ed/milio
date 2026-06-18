@@ -5,14 +5,14 @@ class EmptyState extends StatelessWidget {
   final String title;
   final String subtitle;
   final String buttonText;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const EmptyState({
     super.key,
     required this.title,
     required this.subtitle,
     required this.buttonText,
-    required this.onTap,
+    this.onTap,
   });
 
   @override
@@ -29,7 +29,7 @@ class EmptyState extends StatelessWidget {
             const SizedBox(height: 8),
             Text(subtitle, textAlign: TextAlign.center),
             const SizedBox(height: 20),
-            PrimaryButton(text: buttonText, onTap: onTap),
+            if (onTap != null) PrimaryButton(text: buttonText, onTap: onTap ?? () {}),
           ],
         ),
       ),

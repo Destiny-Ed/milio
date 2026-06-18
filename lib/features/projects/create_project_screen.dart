@@ -259,6 +259,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
               /// VALIDATION SUMMARY
               Container(
                 padding: const EdgeInsets.all(12),
+                width: double.infinity,
                 decoration: BoxDecoration(color: AppColors.softBlue, borderRadius: BorderRadius.circular(12)),
                 child: allocationMode == "percentage"
                     ? Column(

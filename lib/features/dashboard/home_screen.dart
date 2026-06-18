@@ -40,9 +40,9 @@ class HomeDashboardScreen extends StatelessWidget {
           ),
 
           body: ListView(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.sm),
             children: [
-              /// HERO GREETING (UPGRADED)
+              /// HERO GREETING
               AppCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +56,7 @@ class HomeDashboardScreen extends StatelessWidget {
                       style: const TextStyle(color: AppColors.textSecondary),
                     ),
 
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
 
                     PrimaryButton(text: isClient ? "Create Project" : "View Assignments", onTap: () {}),
                   ],
@@ -66,9 +66,9 @@ class HomeDashboardScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               /// SEARCH (kept minimal)
-              const SearchField(hint: "Search projects, milestones..."),
+              // const SearchField(hint: "Search projects, milestones..."),
 
-              const SizedBox(height: 20),
+              // const SizedBox(height: 20),
 
               /// STATS HEADER
               Text("Overview", style: Theme.of(context).textTheme.titleMedium),
@@ -77,7 +77,7 @@ class HomeDashboardScreen extends StatelessWidget {
 
               _stats(appState),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               /// QUICK ACTIONS HEADER
               Text("Quick Actions", style: Theme.of(context).textTheme.titleMedium),
@@ -86,7 +86,7 @@ class HomeDashboardScreen extends StatelessWidget {
 
               _actions(isClient, isAdmin),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               /// RECENT HEADER
               Text(
@@ -104,14 +104,14 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ---------------- TITLE ----------------
+  // TITLE
 
   String _title(AppState state) {
     if (state.isAdmin) return "Admin";
     return state.isClientMode ? "Client" : "Freelancer";
   }
 
-  // ---------------- GREETING ----------------
+  // GREETING
 
   String _greeting() {
     final hour = DateTime.now().hour;
@@ -126,7 +126,7 @@ class HomeDashboardScreen extends StatelessWidget {
     return "Track milestones and get paid securely";
   }
 
-  // ---------------- STATS ----------------
+  // STATS
 
   Widget _stats(AppState state) {
     final isClient = state.isClientMode;
@@ -172,7 +172,7 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ---------------- ACTIONS (CLEANED) ----------------
+  // ACTIONS (CLEANED)
 
   Widget _actions(bool isClient, bool isAdmin) {
     return Row(
@@ -204,12 +204,13 @@ class HomeDashboardScreen extends StatelessWidget {
     );
   }
 
-  // ---------------- RECENT ----------------
+  // RECENT
 
   Widget _recent(bool isClient, bool isAdmin) {
     return Column(
       children: List.generate(3, (i) {
         return AppCard(
+          margin: EdgeInsets.only(bottom: 10),
           child: ListTile(
             leading: CircleAvatar(
               backgroundColor: AppColors.softBlue,
