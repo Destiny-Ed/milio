@@ -1,3 +1,5 @@
+import 'package:milio/core/enums.dart';
+
 import 'milestone_model.dart';
 
 class Project {
@@ -8,7 +10,10 @@ class Project {
   final double totalBudget;
   final String status; // draft, funded, in_progress, completed, cancelled
   final List<Milestone> milestones;
+  final ProjectState state;
   final DateTime createdAt;
+
+  double? progress;
 
   Project({
     required this.id,
@@ -19,6 +24,8 @@ class Project {
     this.status = 'in_progress',
     required this.milestones,
     required this.createdAt,
+    required this.state,
+    this.progress = 0,
   });
 
   double get platformBalance =>

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:milio/core/theme.dart';
+import 'package:milio/features/auth/splash_screen.dart';
 import 'package:milio/features/profile/profile_screen.dart';
 import 'package:milio/features/projects/project_screen.dart';
-import 'package:milio/features/withdrawals/withdrawal_screen.dart';
 import 'package:milio/providers/app_provider.dart';
-import 'features/home/home_screen.dart';
+import 'features/dashboard/home_screen.dart';
 import 'features/wallet/wallet_screen.dart';
 import 'package:provider/provider.dart';
-import 'features/auth/onboarding_screen.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(create: (_) => AppState(), child: const MilioApp()));
@@ -21,13 +20,12 @@ class MilioApp extends StatelessWidget {
     return MaterialApp(
       title: 'Milio',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: const OnboardingScreen(),
+      theme: AppTheme.light,
+      home: const SplashScreen(),
     );
   }
 }
 
-// Bottom Navigation
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -36,29 +34,40 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
+  int _index = 0;
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const ProjectsScreen(),
-    const WalletScreen(),
-    const WithdrawalsScreen(),
-    const ProfileScreen(), // You can create this
-  ];
+  final screens = const [HomeDashboardScreen(), ProjectsScreen(), WalletScreen(), ProfileSettingsScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: AnimatedSwitcher(duration: const Duration(milliseconds: 250), child: screens[_index]),
+
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        selectedIndex: _index,
+        onDestinationSelected: (i) => setState(() => _index = i),
+        height: 65,
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.work), label: 'Projects'),
-          NavigationDestination(icon: Icon(Icons.account_balance_wallet), label: 'Wallet'),
-          NavigationDestination(icon: Icon(Icons.payment), label: 'Withdraw'),
-          NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+          NavigationDestination(
+            icon: Icon(Icons.dashboard_outlined),
+            selectedIcon: Icon(Icons.dashboard),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.work_outline),
+            selectedIcon: Icon(Icons.work),
+            label: 'Projects',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.account_balance_wallet_outlined),
+            selectedIcon: Icon(Icons.account_balance_wallet),
+            label: 'Wallet',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );

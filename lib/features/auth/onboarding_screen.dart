@@ -1,107 +1,109 @@
 import 'package:flutter/material.dart';
-import 'package:milio/features/home/home_screen.dart';
+import 'package:milio/features/auth/role_selection_screen.dart';
+import 'package:milio/main.dart';
+import 'package:milio/providers/app_provider.dart';
+import 'package:provider/provider.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
-
-  @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  final List<Map<String, String>> _onboardingData = [
-    {
-      "title": "Secure Milestone Payments",
-      "desc": "Get paid safely as you deliver milestones",
-      "image": "💰",
-    },
-    {"title": "Smart Wallet System", "desc": "Track earnings and withdraw instantly", "image": "👛"},
-    {"title": "Grow Your Freelance Business", "desc": "Build trust with verified clients", "image": "🚀"},
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      backgroundColor: Colors.white,
+
+      body: Padding(
+        padding: const EdgeInsets.all(24),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                onPageChanged: (value) => setState(() => _currentPage = value),
-                itemCount: _onboardingData.length,
-                itemBuilder: (context, index) {
-                  final data = _onboardingData[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(data["image"]!, style: const TextStyle(fontSize: 120)),
-                        const SizedBox(height: 40),
-                        Text(
-                          data["title"]!,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          data["desc"]!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  );
+            const Spacer(),
+
+            /// LOGO
+            const Icon(Icons.lock_outline, size: 80),
+
+            const SizedBox(height: 20),
+
+            /// HEADLINE
+            const Text(
+              "Secure payments for digital work",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 12),
+
+            const Text(
+              "Milio holds funds in escrow until work is delivered. No disputes. No unpaid work.",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey, fontSize: 14),
+            ),
+
+            const SizedBox(height: 40),
+
+            /// FEATURES
+            _feature(icon: Icons.verified, text: "Milestone-based payments"),
+            _feature(icon: Icons.lock, text: "Secure escrow protection"),
+            _feature(icon: Icons.trending_up, text: "Transparent project tracking"),
+
+            const Spacer(),
+
+            /// APPLE SIGN IN
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.all(14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                icon: const Icon(Icons.apple, color: Colors.white),
+                label: const Text("Continue with Apple", style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  _goToApp(context);
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-                    },
-                    child: const Text('Skip'),
-                  ),
-                  Row(
-                    children: List.generate(
-                      3,
-                      (index) => Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentPage == index ? 24 : 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: _currentPage == index ? Colors.green : Colors.grey,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: _currentPage == 2
-                        ? () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-                          }
-                        : () => _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeIn,
-                          ),
-                    child: Text(_currentPage == 2 ? "Get Started" : "Next"),
-                  ),
-                ],
+
+            const SizedBox(height: 12),
+
+            /// GOOGLE SIGN IN
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                icon: const Icon(Icons.g_mobiledata),
+                label: const Text("Continue with Google"),
+                onPressed: () {
+                  _goToApp(context);
+                },
               ),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),
+    );
+  }
+
+  void _goToApp(BuildContext context) {
+    final appState = Provider.of<AppState>(context, listen: false);
+
+    if (appState.role == null) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const RoleSelectionScreen()));
+    } else {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainScreen()));
+    }
+  }
+
+  Widget _feature({required IconData icon, required String text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(children: [Icon(icon, size: 18), const SizedBox(width: 10), Text(text)]),
     );
   }
 }

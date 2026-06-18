@@ -1,3 +1,5 @@
+import 'package:milio/core/enums.dart';
+
 class Milestone {
   final String id;
   final String title;
@@ -6,6 +8,7 @@ class Milestone {
   final String status; // pending, submitted, approved, rejected
   final String? submissionNote;
   final DateTime? submittedAt;
+   final MilestoneState state;
   final DateTime? approvedAt;
 
   Milestone({
@@ -13,6 +16,7 @@ class Milestone {
     required this.title,
     required this.percentage,
     required this.amount,
+    required this.state,
     this.status = 'pending',
     this.submissionNote,
     this.submittedAt,

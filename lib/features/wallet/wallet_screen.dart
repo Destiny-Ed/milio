@@ -1,87 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:milio/providers/app_provider.dart';
+import 'package:milio/core/theme.dart';
+import 'package:milio/core/widgets/buttons.dart';
 import 'package:provider/provider.dart';
+import '../../core/widgets/app_card.dart';
+import '../../providers/app_provider.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
-    final user = appState.currentUser;
-    final txns = appState.transactions;
+    return Consumer<AppState>(
+      builder: (context, state, _) {
+        final isClient = state.isClientMode;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Wallet')),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFF00C853), Color(0xFF64DD17)]),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(
-                children: [
-                  const Text('Available Balance', style: TextStyle(color: Colors.white70, fontSize: 16)),
-                  Text(
-                    '₦${user.walletBalance.toStringAsFixed(0)}',
-                    style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  Text(
-                    'Total Earned: ₦${user.totalEarned.toStringAsFixed(0)}',
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add Funds'),
-                  ),
+        return Scaffold(
+          appBar: AppBar(title: const Text("Wallet")),
+
+          body: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              /// BALANCE CARD
+              AppCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Total Balance", style: TextStyle(color: AppColors.textSecondary)),
+                    const SizedBox(height: 8),
+                    const Text("₦850,000", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 16),
+
+                    Row(
+                      children: [
+                        Expanded(child: _infoBox("Locked", "₦300,000", AppColors.warning)),
+                        const SizedBox(width: 12),
+                        Expanded(child: _infoBox("Available", "₦550,000", AppColors.success)),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.arrow_outward),
-                    label: const Text('Withdraw'),
-                  ),
+              ),
+
+              const SizedBox(height: 20),
+
+              /// ACTIONS (FREELANCER ONLY)
+              if (!isClient) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: PrimaryButton(text: "Withdraw", onTap: () {}),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 20),
               ],
-            ),
-            const SizedBox(height: 32),
-            const Text('Recent Activity', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            Expanded(
-              child: ListView.builder(
-                itemCount: txns.length,
-                itemBuilder: (context, index) {
-                  final txn = txns[index];
-                  return ListTile(
+
+              /// TRANSACTIONS
+              const Text("Transactions", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+
+              const SizedBox(height: 12),
+
+              ...List.generate(5, (index) {
+                return AppCard(
+                  child: ListTile(
                     leading: Icon(
-                      txn.type == 'credit' ? Icons.arrow_downward : Icons.arrow_upward,
-                      color: txn.type == 'credit' ? Colors.green : Colors.red,
+                      index % 2 == 0 ? Icons.arrow_downward : Icons.arrow_upward,
+                      color: index % 2 == 0 ? AppColors.success : AppColors.warning,
                     ),
-                    title: Text(txn.description),
-                    subtitle: Text(txn.date.toString().substring(0, 10)),
+                    title: Text(index % 2 == 0 ? "Milestone Payment" : "Withdrawal"),
+                    subtitle: const Text("Today", style: TextStyle(color: AppColors.textSecondary)),
                     trailing: Text(
-                      '₦${txn.amount.toStringAsFixed(0)}',
-                      style: TextStyle(color: txn.type == 'credit' ? Colors.green : Colors.red),
+                      index % 2 == 0 ? "+₦120,000" : "-₦50,000",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: index % 2 == 0 ? AppColors.success : AppColors.error,
+                      ),
                     ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _infoBox(String title, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        children: [
+          Text(title, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: TextStyle(fontWeight: FontWeight.bold, color: color),
+          ),
+        ],
       ),
     );
   }

@@ -1,8 +1,9 @@
+import 'package:milio/core/enums.dart';
 import 'package:milio/models/bank_acount_model.dart';
 import 'package:milio/models/milestone_model.dart';
 import 'package:milio/models/project_model.dart';
 import 'package:milio/models/user_model.dart';
-import 'package:milio/models/wallet_transaction_model.dart';
+import 'package:milio/models/transaction_model.dart';
 import 'package:milio/models/withdrawal_model.dart';
 
 class DummyRepository {
@@ -46,26 +47,29 @@ class DummyRepository {
     ),
   ];
 
-  static List<WalletTransaction> transactions = [
-    WalletTransaction(
+  static List<Transaction> transactions = [
+    Transaction(
       id: 't1',
-      type: 'credit',
+      userId: "ed",
+      type: TransactionType.milestoneRelease,
       amount: 300000,
       description: 'Design Milestone Approved - E-commerce App',
-      date: DateTime.now().subtract(const Duration(days: 2)),
+      createdAt: DateTime.now().subtract(const Duration(days: 2)),
     ),
-    WalletTransaction(
+    Transaction(
       id: 't2',
-      type: 'debit',
+      userId: "dk",
+      type: TransactionType.withdrawal,
       amount: 50000,
       description: 'Withdrawal to GTBank',
-      date: DateTime.now().subtract(const Duration(days: 5)),
+      createdAt: DateTime.now().subtract(const Duration(days: 5)),
     ),
   ];
 
   static List<Project> myProjects = [
     Project(
       id: 'p1',
+      state: ProjectState.inProgress,
       title: 'E-commerce Mobile App',
       clientName: 'TechCorp Ltd',
       freelancerId: 'freelancer_001',
@@ -80,6 +84,7 @@ class DummyRepository {
           amount: 300000,
           status: 'approved',
           approvedAt: DateTime.now().subtract(const Duration(days: 10)),
+          state: MilestoneState.approved,
         ),
         Milestone(
           id: 'm2',
@@ -87,6 +92,8 @@ class DummyRepository {
           percentage: 40,
           amount: 400000,
           status: 'submitted',
+          state: MilestoneState.submitted,
+
           submittedAt: DateTime.now().subtract(const Duration(days: 3)),
         ),
         Milestone(
@@ -94,6 +101,8 @@ class DummyRepository {
           title: 'Final Delivery & Testing',
           percentage: 30,
           amount: 300000,
+          state: MilestoneState.pending,
+
           status: 'pending',
         ),
       ],
@@ -116,6 +125,8 @@ class DummyRepository {
           percentage: 30,
           amount: 300000,
           status: 'approved',
+          state: MilestoneState.approved,
+
           approvedAt: DateTime.now().subtract(const Duration(days: 10)),
         ),
         Milestone(
@@ -124,6 +135,8 @@ class DummyRepository {
           percentage: 40,
           amount: 400000,
           status: 'submitted',
+          state: MilestoneState.submitted,
+
           submissionNote: 'Completed API endpoints, Postman collection attached.',
           submittedAt: DateTime.now().subtract(const Duration(days: 3)),
         ),
@@ -133,8 +146,10 @@ class DummyRepository {
           percentage: 30,
           amount: 300000,
           status: 'pending',
+          state: MilestoneState.pending,
         ),
       ],
+      state: ProjectState.inProgress,
     ),
   ];
 
